@@ -14,6 +14,10 @@ The scanner discovers controllers and reads configured tags so a technician can 
 - Provides compact overlay and Windows taskbar views for keeping station information visible while using other applications.
 - Optionally works with a separate Echo agent to restart one uniquely identified **emulated Logix Echo** controller. This optional action is not available for physical, unmatched, or ambiguous devices; see [Echo agent setup](ECHO-AGENT-SETUP.md).
 
+## Download
+
+Download the latest ready-to-run Windows x64 build from [GitHub Releases](https://github.com/JSTMFG/PLCDiscoveryTool/releases/latest). The release ZIP contains the self-contained PLC Finder executable; extract it and run `JST PLC Finder.exe`.
+
 ## Run the application
 
 After building or obtaining a release, launch `dist/JST PLC Finder.exe` on a Windows x64 computer. The published executable is self-contained and includes the .NET runtime and native PLC communication library. Normal use does not require an installer, internet access, Studio 5000, or RSLinx. Third-party license information is available in **Help / About**.
@@ -67,7 +71,7 @@ Building requires Windows and the .NET 10 SDK. From the repository root, run:
 ./build.ps1
 ```
 
-The script runs the tests and publishes self-contained Windows x64 executables into `dist`: PLC Finder and the optional server agent under `dist/Echo Agent`. Source projects are under `src`; tests are under `tests/Jst.PlcFinder.Tests`. NuGet dependencies are pinned with lock files. The script uses `.tools/dotnet` when that local SDK is present, otherwise it uses `dotnet` from `PATH`.
+The script runs the tests and publishes self-contained Windows x64 executables into `dist`: PLC Finder and the optional server agent under `dist/Echo Agent`. It also refreshes both ZIP packages, including `dist/JST Echo Reset Agent - Portable.zip` with the agent launch scripts. Source projects are under `src`; tests are under `tests/Jst.PlcFinder.Tests`. NuGet dependencies are pinned with lock files. The script uses `.tools/dotnet` when that local SDK is present, otherwise it uses `dotnet` from `PATH`.
 
 The integration tests use a loopback-only fake EtherNet/IP PLC on TCP port 44818; they do not contact production PLCs. They cover direct and routed connections, tag reads, bit access, missing tags, session reuse, and cancellation. The fake endpoint rejects unexpected tag services.
 

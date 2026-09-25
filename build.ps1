@@ -16,7 +16,13 @@ try {
     $agentOutput = Join-Path $PSScriptRoot 'dist/Echo Agent'
     & $dotnet publish src/Jst.EchoAgent/Jst.EchoAgent.csproj -c Release -r win-x64 --self-contained true -o $agentOutput
     if ($LASTEXITCODE -ne 0) { throw 'Echo agent publish failed.' }
+    Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'packaging/echo-agent') -File |
+        Where-Object Name -ne 'JST Echo Reset Agent.exe' |
+        Copy-Item -Destination $agentOutput -Force
+    $agentArchive = Join-Path $PSScriptRoot 'dist/JST Echo Reset Agent - Portable.zip'
+    Compress-Archive -Path (Join-Path $agentOutput '*') -DestinationPath $agentArchive -CompressionLevel Optimal -Force
     Write-Host "Executable: $PSScriptRoot\dist\JST PLC Finder.exe"
     Write-Host "Executable ZIP: $PSScriptRoot\dist\JST PLC Finder.zip"
     Write-Host "Echo agent: $agentOutput\JST Echo Reset Agent.exe"
+    Write-Host "Echo agent ZIP: $agentArchive"
 } finally { Pop-Location }

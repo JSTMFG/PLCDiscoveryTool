@@ -18,6 +18,7 @@ public class UserSettings
     public bool AutoRefreshEnabled { get; set; }
     public int AutoRefreshSeconds { get; set; } = 5;
     public string StartupMode { get; set; } = "Main";
+    public string Appearance { get; set; } = "Light";
     public bool ScanOnStartup { get; set; }
     public bool AutoScanEnabled { get; set; }
     public int AutoScanSeconds { get; set; } = 300;

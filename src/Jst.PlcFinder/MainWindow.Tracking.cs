@@ -100,7 +100,7 @@ public partial class MainWindow
         tabs.Items.Add(new TabItem { Header = "Columns", Content = new ScrollViewer { Content = columnPanel, VerticalScrollBarVisibility = ScrollBarVisibility.Auto } });
         var panel = new StackPanel { Margin = new Thickness(20) };
         panel.Children.Add(new TextBlock { Text = "Developer tracking settings", FontSize = 20, FontWeight = FontWeights.SemiBold });
-        panel.Children.Add(new TextBlock { Text = "Map each PLC STRING tag and choose the field labels shown to users.", Foreground = Brushes.DimGray, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 4, 0, 12) });
+        panel.Children.Add(new TextBlock { Text = "Map each PLC STRING tag and choose the field labels shown to users.", Foreground = (Brush)Application.Current.FindResource("AppMuted"), TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 4, 0, 12) });
         var tags = new TextBox[5]; var labels = new TextBox[5];
         for (int i = 0; i < 5; i++)
         {
@@ -109,7 +109,7 @@ public partial class MainWindow
             panel.Children.Add(new TextBlock { Text = $"Field {i} PLC tag", FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 7, 0, 3) });
             tags[i] = new TextBox { Text = current.Tags[i] }; panel.Children.Add(tags[i]);
         }
-        panel.Children.Add(new TextBlock { Text = "Field 2 is the automatic Last claimed date. It uses MMDDYY whenever Developer changes.", Foreground = Brushes.DimGray, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 12, 0, 0) });
+        panel.Children.Add(new TextBlock { Text = "Field 2 is the automatic Last claimed date. It uses MMDDYY whenever Developer changes.", Foreground = (Brush)Application.Current.FindResource("AppMuted"), TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 12, 0, 0) });
         var buttons = new WrapPanel { Margin = new Thickness(0, 18, 0, 0) };
         var save = new Button { Content = "Save settings", Padding = new Thickness(10, 5, 10, 5) };
         var cancel = new Button { Content = "Cancel", Padding = new Thickness(10, 5, 10, 5), Margin = new Thickness(0) };
@@ -118,6 +118,7 @@ public partial class MainWindow
         var readOverlaySettings = AddOverlaySettingsTab(tabs);
         var readTaskbarSettings = AddTaskbarSettingsTab(tabs, selectTaskbar);
         var readStartupSettings = AddStartupSettingsTab(tabs);
+        var readAppearance = AddAppearanceSettingsTab(tabs);
         var layout = new DockPanel();
         buttons.Margin = new Thickness(20);
         DockPanel.SetDock(buttons, Dock.Bottom);
@@ -154,11 +155,13 @@ public partial class MainWindow
             saved.Taskbar = taskbarSettings;
             var previousOverlay = saved.Overlay;
             var previousStartup = (saved.StartupMode, saved.ScanOnStartup, saved.AutoScanEnabled, saved.AutoScanSeconds);
+            var previousAppearance = saved.Appearance;
             saved.Overlay = overlaySettings;
             saved.StartupMode = startupSettings.Mode;
             saved.ScanOnStartup = startupSettings.ScanOnStartup;
             saved.AutoScanEnabled = startupSettings.AutoScan;
             saved.AutoScanSeconds = startupSettings.Seconds;
+            saved.Appearance = readAppearance();
             saved.DeveloperTracking = new(tags[0].Text.Trim(), tags[1].Text.Trim(), tags[2].Text.Trim(), tags[3].Text.Trim(), tags[4].Text.Trim(),
                 labels[0].Text.Trim(), labels[1].Text.Trim(), labels[2].Text.Trim(), labels[3].Text.Trim(), labels[4].Text.Trim());
             saved.VisibleColumns = columnChecks.ToDictionary(p => p.Key, p => p.Value.IsChecked == true);
@@ -166,6 +169,7 @@ public partial class MainWindow
             {
                 saved.DeveloperTracking = previous; saved.VisibleColumns = previousColumns; saved.Overlay = previousOverlay; saved.Taskbar = previousTaskbar;
                 (saved.StartupMode, saved.ScanOnStartup, saved.AutoScanEnabled, saved.AutoScanSeconds) = previousStartup;
+                saved.Appearance = previousAppearance;
                 MessageBox.Show(window, "Settings could not be saved. Please try again."); return;
             }
             ApplyStationColumns();
@@ -174,6 +178,7 @@ public partial class MainWindow
             UpdateTaskbarStation();
             overlay?.ApplySettings(CurrentOverlaySettings, OverlayFields());
             ApplyActiveThemes();
+            ApplyAppearance();
             if (previous != saved.DeveloperTracking)
                 foreach (var row in Devices) row.ClearTracking();
             StatusText.Text = "Settings saved · Refresh to read updated tracking mappings";

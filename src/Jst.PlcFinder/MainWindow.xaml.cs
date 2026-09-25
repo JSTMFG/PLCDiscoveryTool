@@ -44,6 +44,7 @@ public partial class MainWindow : Window
         notificationSmokeTest = notificationSmoke;
         saved = smoke ? new() : SettingsStore.Load();
         InitializeComponent();
+        ApplyAppearance();
         InitializeModeThemeTracking();
         InitializeTaskbarCoordination();
         RangeGrid.ItemsSource = Ranges;
