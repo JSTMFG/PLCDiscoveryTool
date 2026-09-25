@@ -14,6 +14,10 @@ The scanner discovers controllers and reads configured tags so a technician can 
 - Provides compact overlay and Windows taskbar views for keeping station information visible while using other applications.
 - Optionally works with a separate Echo agent to restart one uniquely identified **emulated Logix Echo** controller. This optional action is not available for physical, unmatched, or ambiguous devices; see [Echo agent setup](ECHO-AGENT-SETUP.md).
 
+## Download
+
+Download the latest ready-to-run Windows x64 build from [GitHub Releases](https://github.com/JSTMFG/PLCDiscoveryTool/releases/latest). The release ZIP contains the self-contained PLC Finder executable; extract it and run `JST PLC Finder.exe`.
+
 ## Run the application
 
 After building or obtaining a release, launch `dist/JST PLC Finder.exe` on a Windows x64 computer. The published executable is self-contained and includes the .NET runtime and native PLC communication library. Normal use does not require an installer, internet access, Studio 5000, or RSLinx. Third-party license information is available in **Help / About**.
