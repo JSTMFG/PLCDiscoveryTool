@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "libplctag.NativeImport": {
+        "type": "Direct",
+        "requested": "[1.0.41, )",
+        "resolved": "1.0.41",
+        "contentHash": "cm7TXwCMg4lALRtP/XJzxI4db9qYcRPB7kglPfDOqiNE1PQ4O/gOC5KPCwoGhIw07FBKvVDnl5sjbXS3iK2tEw=="
+      }
+    },
+    "net10.0/win-x64": {}
+  }
+}

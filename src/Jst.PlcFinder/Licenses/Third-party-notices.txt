@@ -1,0 +1,29 @@
+JST PLC Finder — third-party notices
+
+libplctag.NativeImport 1.0.41
+Copyright libplctag.NET contributors.
+Used unmodified under the Mozilla Public License 2.0.
+Corresponding source:
+https://github.com/libplctag/libplctag.NET/tree/6ba1b192553372e65fb10eb6a0f1fb577890bdb9
+Package:
+https://www.nuget.org/packages/libplctag.NativeImport/1.0.41
+
+The package includes the native libplctag library. The native library is used
+under the Mozilla Public License 2.0 option of its dual licensing.
+Copyright libplctag contributors.
+Native version 2.6.0; corresponding source:
+https://github.com/libplctag/libplctag/tree/v2.6.0
+The exact native version is displayed in Help. The wrapper source commit above
+also contains the native binaries distributed in the NuGet package.
+The MPL 2.0 license text is embedded alongside this notice.
+Recipients can obtain the covered source from these links under MPL 2.0;
+no application restriction is intended to limit rights in that covered source.
+
+.NET and Windows Presentation Foundation
+Copyright .NET Foundation and Contributors; Microsoft Corporation.
+Distributed as an unmodified self-contained runtime under the MIT license.
+https://github.com/dotnet/runtime
+https://github.com/dotnet/wpf
+The runtime license and third-party notices are embedded alongside this notice.
+
+JST.BMP is the logo supplied by the user for this application.
