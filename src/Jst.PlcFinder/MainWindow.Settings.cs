@@ -99,4 +99,28 @@ public partial class MainWindow
         tabs.Items.Add(new TabItem { Header = "Appearance", Content = panel });
         return () => (string)theme.SelectedItem;
     }
+
+    private Func<NotificationSettings> AddNotificationSettingsTab(TabControl tabs)
+    {
+        var current = CurrentNotificationSettings;
+        var panel = new StackPanel { Margin = new Thickness(20) };
+        panel.Children.Add(new TextBlock { Text = "Windows notifications", FontSize = 20,
+            FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 0, 0, 10) });
+        panel.Children.Add(new TextBlock { Text = "Alerts appear after a completed scan or refresh. Windows notification settings can also silence this app.",
+            TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 14) });
+        var offline = new CheckBox { Content = "PLC stops responding", IsChecked = current.StoppedResponding, Margin = new Thickness(0, 6, 0, 6) };
+        var recovered = new CheckBox { Content = "PLC responds again", IsChecked = current.RespondingAgain, Margin = new Thickness(0, 6, 0, 6) };
+        var found = new CheckBox { Content = "New devices found by automatic scan", IsChecked = current.NewDevices, Margin = new Thickness(0, 6, 0, 6) };
+        var tracking = new CheckBox { Content = "Developer tracking fields change", IsChecked = current.DeveloperChanges, Margin = new Thickness(0, 6, 0, 6) };
+        panel.Children.Add(offline); panel.Children.Add(recovered);
+        panel.Children.Add(found); panel.Children.Add(tracking);
+        tabs.Items.Add(new TabItem { Header = "Notifications", Content = new ScrollViewer { Content = panel } });
+        return () => new NotificationSettings
+        {
+            StoppedResponding = offline.IsChecked == true,
+            RespondingAgain = recovered.IsChecked == true,
+            NewDevices = found.IsChecked == true,
+            DeveloperChanges = tracking.IsChecked == true
+        };
+    }
 }

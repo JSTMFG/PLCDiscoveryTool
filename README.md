@@ -87,6 +87,8 @@ This mode loads private sample rows, checks several window layouts and controls,
 
 The standard window includes a filterable station list. **Overlay mode** provides a compact resizable list with configurable fields, opacity, and color. **Taskbar mode** displays one selected controller beside the Windows clock/taskbar area and can rotate through included stations. Its display, scroll interval, refresh interval, color, and PLC inclusion list are configurable. The overlay and taskbar modes keep separate visual settings; main-window auto-refresh is independent of taskbar auto-refresh.
 
+Under **Settings > Notifications**, each Windows alert can be switched on or off separately: a PLC stops responding, a PLC responds again, an automatic scan finds a new device, or Developer tracking fields change. Connectivity alerts work in Main, Overlay, and Taskbar modes after a completed scan or refresh. Windows notification settings may also silence the app.
+
 Preferences are stored per Windows user under `HKEY_CURRENT_USER\Software\JST\PlcFinder`; no settings file needs to be distributed. As with other self-contained .NET applications, runtime components may be extracted to the user's .NET cache when the program starts.
 
 ## Project notes

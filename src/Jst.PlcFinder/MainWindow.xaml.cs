@@ -252,7 +252,8 @@ public partial class MainWindow : Window
                 ScanProgress.Value = 100;
                 foreach (var row in Devices.Where(r => ranges.Any(x => r.IpSort >= x.First && r.IpSort <= x.Last) && !seen.Contains(r.Ip))) row.Mark("Not responding", "No EtherNet/IP reply during this scan");
                 await RefreshEchoInventoryAsync(token, true);
-                if (automatic && taskbarWidget is not null && knownDevices is not null)
+                NotifyConnectivityChanges(Devices.Where(r => ranges.Any(x => r.IpSort >= x.First && r.IpSort <= x.Last)));
+                if (automatic && knownDevices is not null)
                     ShowNewDevices(ScanChanges.NewNetworkDevices(knownDevices,
                         Devices.Where(row => seen.Contains(row.Ip))));
                 StatusText.Text = $"Scan complete in {elapsed.Elapsed.TotalSeconds:N1} sec · {count:N0} addresses checked · {seen.Count} Allen-Bradley endpoints found";
@@ -363,6 +364,7 @@ public partial class MainWindow : Window
                 var processed = new HashSet<string>();
                 foreach (var id in found.Where(d => d.IsAllenBradley)) await HandleIdentityAsync(id, routes, settings, processed, token);
                 await RefreshEchoInventoryAsync(token, true);
+                NotifyConnectivityChanges(Devices.Where(row => processed.Contains(row.Key)));
                 StatusText.Text = $"Local discovery complete · {found.Count(d => d.IsAllenBradley)} Allen-Bradley endpoints found";
                 AutoSizeStationColumns();
             });
@@ -380,9 +382,6 @@ public partial class MainWindow : Window
         var local = (AdaptersBox.SelectedItem as Adapter)?.Address;
         var rows = Devices.Where(r => r.Status != "Unsupported" && r.Status != "Route needed" && (force || r.NextPoll <= DateTimeOffset.UtcNow)).ToArray();
         if (rows.Length == 0) return;
-        bool taskbarRefresh = taskbarWidget is not null;
-        if (taskbarRefresh)
-            foreach (var row in rows.Where(row => row.Status == "Online")) offlineTransitions.Observe(row.Key, row.Status);
         var trackingChanges = new List<(PlcRow Row, IReadOnlyList<DeveloperFieldChange> Changes)>();
         StatusText.Text = $"{(automatic ? "Auto-refreshing" : "Refreshing")} {rows.Length} stations…";
         await Parallel.ForEachAsync(rows, new ParallelOptions { MaxDegreeOfParallelism = 4, CancellationToken = token }, async (row, ct) =>
@@ -397,11 +396,7 @@ public partial class MainWindow : Window
             await ReadRowAsync(row, settings, ct, (changedRow, changes) => trackingChanges.Add((changedRow, changes)));
         });
         if (trackingChanges.Count > 0) ShowDeveloperChanges(trackingChanges);
-        if (taskbarRefresh && taskbarWidget is not null)
-        {
-            var wentOffline = rows.Where(row => offlineTransitions.Observe(row.Key, row.Status)).ToArray();
-            ShowOfflineDevices(wentOffline);
-        }
+        NotifyConnectivityChanges(rows);
         StatusText.Text = (automatic ? "Auto-refresh" : "Refresh") + " complete · " + DateTime.Now.ToString("HH:mm:ss");
         AutoSizeStationColumns();
     }

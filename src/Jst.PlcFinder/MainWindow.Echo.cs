@@ -134,6 +134,7 @@ public partial class MainWindow
             if (identity is null)
             {
                 selected.Mark("Not responding", "Echo reports the controller is on, but EtherNet/IP did not answer after reset.");
+                NotifyConnectivityChanges([selected]);
                 StatusText.Text = "Echo reset complete · EtherNet/IP is not responding";
                 return;
             }
@@ -145,6 +146,7 @@ public partial class MainWindow
             }
             selected.ConfirmIdentity(identity);
             await ReadRowAsync(selected, ReadTagSettings(), token);
+            NotifyConnectivityChanges([selected]);
             StatusText.Text = "Echo reset complete · PLC responding";
             await RefreshEchoInventoryAsync(token, true);
         }

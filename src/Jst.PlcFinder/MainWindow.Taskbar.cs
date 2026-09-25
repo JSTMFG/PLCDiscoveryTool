@@ -49,7 +49,6 @@ public partial class MainWindow
             try { overlay?.Close(); }
             finally { switchingDisplayMode = false; }
             Hide();
-            foreach (var row in Devices) offlineTransitions.Observe(row.Key, row.Status);
             Devices.CollectionChanged += TaskbarDevicesChanged;
             taskbarScroll.Tick += TaskbarScrollTick;
             taskbarRefresh.Tick += TaskbarRefreshTick;
@@ -136,7 +135,6 @@ public partial class MainWindow
 
     private void StopTaskbarMode()
     {
-        offlineTransitions.Clear();
         taskbarReconnect.Stop();
         taskbarReconnect.Tick -= ReconnectTaskbarTick;
         taskbarScroll.Stop();
