@@ -71,7 +71,7 @@ Building requires Windows and the .NET 10 SDK. From the repository root, run:
 ./build.ps1
 ```
 
-The script runs the tests and publishes self-contained Windows x64 executables into `dist`: PLC Finder and the optional server agent under `dist/Echo Agent`. Source projects are under `src`; tests are under `tests/Jst.PlcFinder.Tests`. NuGet dependencies are pinned with lock files. The script uses `.tools/dotnet` when that local SDK is present, otherwise it uses `dotnet` from `PATH`.
+The script runs the tests and publishes self-contained Windows x64 executables into `dist`: PLC Finder and the optional server agent under `dist/Echo Agent`. It also refreshes both ZIP packages, including `dist/JST Echo Reset Agent - Portable.zip` with the agent launch scripts. Source projects are under `src`; tests are under `tests/Jst.PlcFinder.Tests`. NuGet dependencies are pinned with lock files. The script uses `.tools/dotnet` when that local SDK is present, otherwise it uses `dotnet` from `PATH`.
 
 The integration tests use a loopback-only fake EtherNet/IP PLC on TCP port 44818; they do not contact production PLCs. They cover direct and routed connections, tag reads, bit access, missing tags, session reuse, and cancellation. The fake endpoint rejects unexpected tag services.
 

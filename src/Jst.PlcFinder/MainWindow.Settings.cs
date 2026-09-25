@@ -86,4 +86,17 @@ public partial class MainWindow
         autoScan.Interval = TimeSpan.FromSeconds(Math.Clamp(saved.AutoScanSeconds, 30, 3600));
         if (saved.AutoScanEnabled && !smokeTest) autoScan.Start();
     }
+
+    private Func<string> AddAppearanceSettingsTab(TabControl tabs)
+    {
+        var panel = new StackPanel { Margin = new Thickness(20) };
+        panel.Children.Add(new TextBlock { Text = "Appearance", FontSize = 20, FontWeight = FontWeights.SemiBold,
+            Margin = new Thickness(0, 0, 0, 12) });
+        panel.Children.Add(new TextBlock { Text = "Main window and settings theme", Margin = new Thickness(0, 0, 0, 5) });
+        var theme = new ComboBox { ItemsSource = new[] { "Light", "Dark" },
+            SelectedItem = saved.Appearance == "Dark" ? "Dark" : "Light" };
+        panel.Children.Add(theme);
+        tabs.Items.Add(new TabItem { Header = "Appearance", Content = panel });
+        return () => (string)theme.SelectedItem;
+    }
 }
