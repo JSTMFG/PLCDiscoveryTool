@@ -30,7 +30,16 @@ public class UserSettings
     public Dictionary<string, bool> VisibleColumns { get; set; } = new();
     public OverlaySettings Overlay { get; set; } = new();
     public TaskbarSettings Taskbar { get; set; } = new();
+    public NotificationSettings Notifications { get; set; } = new();
     public static List<SearchRange> Defaults() => [new() { Range = "10.10.10.X" }, new() { Range = "10.10.9.X" }, new() { Range = "192.168.9.X" }];
+}
+
+public class NotificationSettings
+{
+    public bool StoppedResponding { get; set; } = true;
+    public bool RespondingAgain { get; set; } = true;
+    public bool NewDevices { get; set; } = true;
+    public bool DeveloperChanges { get; set; } = true;
 }
 
 public class TaskbarSettings

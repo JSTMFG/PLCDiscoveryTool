@@ -119,6 +119,7 @@ public partial class MainWindow
         var readTaskbarSettings = AddTaskbarSettingsTab(tabs, selectTaskbar);
         var readStartupSettings = AddStartupSettingsTab(tabs);
         var readAppearance = AddAppearanceSettingsTab(tabs);
+        var readNotifications = AddNotificationSettingsTab(tabs);
         var layout = new DockPanel();
         buttons.Margin = new Thickness(20);
         DockPanel.SetDock(buttons, Dock.Bottom);
@@ -156,12 +157,14 @@ public partial class MainWindow
             var previousOverlay = saved.Overlay;
             var previousStartup = (saved.StartupMode, saved.ScanOnStartup, saved.AutoScanEnabled, saved.AutoScanSeconds);
             var previousAppearance = saved.Appearance;
+            var previousNotifications = saved.Notifications;
             saved.Overlay = overlaySettings;
             saved.StartupMode = startupSettings.Mode;
             saved.ScanOnStartup = startupSettings.ScanOnStartup;
             saved.AutoScanEnabled = startupSettings.AutoScan;
             saved.AutoScanSeconds = startupSettings.Seconds;
             saved.Appearance = readAppearance();
+            saved.Notifications = readNotifications();
             saved.DeveloperTracking = new(tags[0].Text.Trim(), tags[1].Text.Trim(), tags[2].Text.Trim(), tags[3].Text.Trim(), tags[4].Text.Trim(),
                 labels[0].Text.Trim(), labels[1].Text.Trim(), labels[2].Text.Trim(), labels[3].Text.Trim(), labels[4].Text.Trim());
             saved.VisibleColumns = columnChecks.ToDictionary(p => p.Key, p => p.Value.IsChecked == true);
@@ -170,6 +173,7 @@ public partial class MainWindow
                 saved.DeveloperTracking = previous; saved.VisibleColumns = previousColumns; saved.Overlay = previousOverlay; saved.Taskbar = previousTaskbar;
                 (saved.StartupMode, saved.ScanOnStartup, saved.AutoScanEnabled, saved.AutoScanSeconds) = previousStartup;
                 saved.Appearance = previousAppearance;
+                saved.Notifications = previousNotifications;
                 MessageBox.Show(window, "Settings could not be saved. Please try again."); return;
             }
             ApplyStationColumns();

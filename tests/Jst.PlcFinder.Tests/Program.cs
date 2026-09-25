@@ -274,19 +274,20 @@ Test("Manual carousel navigation wraps both ways and skips hidden PLCs", () =>
     Assert(carousel.Current == rows[0]);
 });
 await EchoTests.RunAsync(Test);
-Test("Taskbar offline alerts fire once after online and rearm on recovery", () =>
+Test("Connectivity alerts fire once per outage and report recovery", () =>
 {
-    var tracker = new OfflineTransitionTracker();
-    Assert(!tracker.Observe("10.10.9.10|", "Not responding"));
-    Assert(!tracker.Observe("10.10.9.10|", "Online"));
-    Assert(!tracker.Observe("10.10.9.10|", "Partial"));
-    Assert(tracker.Observe("10.10.9.10|", "Not responding"));
-    Assert(!tracker.Observe("10.10.9.10|", "Not responding"));
-    Assert(!tracker.Observe("10.10.9.11|", "Not responding"));
-    Assert(!tracker.Observe("10.10.9.10|", "Online"));
-    Assert(tracker.Observe("10.10.9.10|", "Not responding"));
-    tracker.Clear();
-    Assert(!tracker.Observe("10.10.9.10|", "Not responding"));
+    var tracker = new ConnectivityTransitionTracker();
+    const string key = "10.10.9.10|";
+    Assert(tracker.Observe(key, "Not responding") == ConnectivityTransition.None);
+    Assert(tracker.Observe(key, "Online") == ConnectivityTransition.None);
+    Assert(tracker.Observe(key, "Not responding") == ConnectivityTransition.StoppedResponding);
+    Assert(tracker.Observe(key, "Not responding") == ConnectivityTransition.None);
+    Assert(tracker.Observe(key, "Checking") == ConnectivityTransition.None);
+    Assert(tracker.Observe(key, "Partial") == ConnectivityTransition.RespondingAgain);
+    Assert(tracker.Observe(key, "Online") == ConnectivityTransition.None);
+    Assert(tracker.Observe(key, "Not responding") == ConnectivityTransition.StoppedResponding);
+    Assert(tracker.Observe(key, "Tag read timeout") == ConnectivityTransition.RespondingAgain);
+    Assert(tracker.Observe("10.10.9.11|", "Not responding") == ConnectivityTransition.None);
 });
 Test("Automatic scan groups only newly discovered network devices", () =>
 {
